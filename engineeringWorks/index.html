@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engineering Works — Adarsh Mishra</title>
+  <meta name="description" content="Engineering works by Adarsh Mishra — documents, decks, images, and videos." />
+  <style>
+    :root { --radius: 20px; }
+
+    [data-theme="night"] {
+      --bg-gradient: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #6a3093, #1a2980);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.18);
+      --text: #f5f6ff;
+      --text-dim: rgba(245, 246, 255, 0.7);
+      --panel: rgba(20, 18, 45, 0.92);
+      --doc-bg: #f7f7fb;
+      --doc-text: #1d1b33;
+    }
+
+    [data-theme="day"] {
+      --bg-gradient: linear-gradient(-45deg, #c4b5fd, #e9c5f0, #c6dcf7, #bdf0d6, #f7d6c4);
+      --card-bg: rgba(255, 255, 255, 0.38);
+      --card-border: rgba(255, 255, 255, 0.65);
+      --text: #2c2356;
+      --text-dim: rgba(44, 35, 86, 0.7);
+      --panel: rgba(255, 255, 255, 0.92);
+      --doc-bg: #ffffff;
+      --doc-text: #1d1b33;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      background-size: 400% 400%;
+      animation: gradientShift 18s ease infinite;
+      display: flex;
+      flex-direction: column;
+      transition: color 0.5s ease;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ---------- TOP BAR ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 26px clamp(20px, 5vw, 48px);
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.2s ease;
+    }
+    .home-link:hover { transform: translateX(-3px); }
+
+    /* ---------- THEME TOGGLE ---------- */
+    .theme-toggle {
+      display: flex;
+      gap: 2px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .theme-toggle button {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      border: none; background: transparent; border-radius: 50%;
+      cursor: pointer; color: var(--text-dim);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .theme-toggle button svg { width: 19px; height: 19px; }
+    .theme-toggle button:hover { color: var(--text); }
+    .theme-toggle button.active {
+      color: #fff;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      box-shadow: 0 4px 14px rgba(120, 115, 245, 0.45);
+    }
+
+    /* ---------- HEADER ---------- */
+    .page-head {
+      text-align: center;
+      padding: 14px 24px 30px;
+    }
+    .page-head h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #ff9a9e, #fad0c4, #a18cd1, #84fab0);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 6s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+    .page-head p { margin-top: 12px; color: var(--text-dim); font-size: 1.05rem; }
+
+    /* ---------- GRID ---------- */
+    main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 10px 24px 60px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .tile {
+      position: relative;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 28px 26px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      font: inherit;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .tile::before {
+      content: ""; position: absolute; inset: 0;
+      background: var(--accent); opacity: 0.16; transition: opacity 0.3s ease;
+    }
+    .tile:hover { transform: translateY(-8px); border-color: rgba(255,255,255,0.4); box-shadow: 0 18px 40px rgba(0,0,0,0.35); }
+    .tile:hover::before { opacity: 0.3; }
+    .tile > * { position: relative; z-index: 1; }
+
+    .tile .icon { display: block; margin-bottom: 14px; }
+    .tile .icon svg { width: 36px; height: 36px; }
+    .tile h2 { font-size: 1.18rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }
+    .tile p { font-size: 0.92rem; color: var(--text-dim); line-height: 1.5; }
+    .tile .badge {
+      display: inline-block; margin-top: 16px;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px;
+      background: rgba(255,255,255,0.16); color: var(--text);
+    }
+
+    .t-image  { --accent: linear-gradient(135deg, #36d1dc, #5b86e5); }
+    .t-video  { --accent: linear-gradient(135deg, #ee0979, #ff6a00); }
+    .t-pdf    { --accent: linear-gradient(135deg, #f7971e, #ffd200); }
+    .t-doc    { --accent: linear-gradient(135deg, #11998e, #38ef7d); }
+    .t-slides { --accent: linear-gradient(135deg, #8e2de2, #4a00e0); }
+
+    /* ---------- VIEWER ---------- */
+    .viewer { display: none; flex-direction: column; flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 24px 50px; }
+    .viewer.open { display: flex; }
+
+    .viewer-bar {
+      display: flex; align-items: center; gap: 14px;
+      padding: 6px 0 18px;
+      position: sticky; top: 0; z-index: 5;
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      cursor: pointer; font: inherit; font-weight: 600; font-size: 0.95rem;
+      color: #fff; padding: 11px 20px; border: none; border-radius: 999px;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      box-shadow: 0 6px 18px rgba(120,115,245,0.4);
+      transition: transform 0.2s ease;
+    }
+    .back-btn:hover { transform: translateX(-3px); }
+    .viewer-title { font-size: 1.15rem; font-weight: 700; }
+
+    .fs-btn {
+      margin-left: auto;
+      display: inline-flex; align-items: center; gap: 8px;
+      cursor: pointer; font: inherit; font-weight: 600; font-size: 0.92rem;
+      color: var(--text); padding: 10px 18px; border-radius: 999px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .fs-btn:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.4); }
+    @media (max-width: 480px) { .fs-btn span { display: none; } }
+
+    .viewer-stage {
+      background: var(--panel);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .viewer-stage img.v-img { max-width: 100%; height: auto; border-radius: 10px; margin: auto; display: block; }
+    .viewer-stage video.v-video { width: 100%; max-height: 78vh; border-radius: 10px; margin: auto; background: #000; }
+    .viewer-stage iframe.v-frame { width: 100%; height: 80vh; border: none; border-radius: 10px; background: #fff; }
+
+    .doc-scroll { overflow-y: auto; max-height: 80vh; border-radius: 10px; }
+    .doc-page {
+      background: var(--doc-bg); color: var(--doc-text);
+      padding: 48px clamp(20px, 6%, 64px);
+      border-radius: 10px;
+      line-height: 1.65; font-size: 1rem;
+    }
+    .doc-page h1, .doc-page h2, .doc-page h3 { color: var(--doc-text); margin: 1.1em 0 0.5em; line-height: 1.3; }
+    .doc-page p { margin: 0 0 0.9em; }
+    .doc-page table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    .doc-page td, .doc-page th { border: 1px solid #ccc; padding: 8px 10px; }
+    .doc-page img { max-width: 100%; height: auto; }
+    .doc-page ul, .doc-page ol { margin: 0 0 0.9em 1.4em; }
+
+    .v-msg { margin: auto; text-align: center; color: var(--text-dim); padding: 40px; font-size: 1rem; line-height: 1.6; }
+
+    /* ---------- FULLSCREEN ---------- */
+    .viewer-stage:fullscreen {
+      border-radius: 0; padding: 0; min-height: 0;
+      width: 100vw; height: 100vh; background: #0b0a1f;
+    }
+    .viewer-stage:fullscreen iframe.v-frame { height: 100vh; border-radius: 0; }
+    .viewer-stage:fullscreen video.v-video { max-height: 100vh; border-radius: 0; }
+    .viewer-stage:fullscreen img.v-img { max-height: 100vh; border-radius: 0; }
+    .viewer-stage:fullscreen .doc-scroll { max-height: 100vh; height: 100vh; }
+    .viewer-stage:fullscreen .doc-page { border-radius: 0; min-height: 100vh; }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+      .topbar { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="home-link" href="../index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Home
+    </a>
+    <div class="theme-toggle" role="group" aria-label="Color theme">
+      <button data-mode="day" aria-label="Day theme" title="Day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+      <button data-mode="auto" aria-label="Auto theme" title="Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
+      <button data-mode="night" aria-label="Night theme" title="Night"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+    </div>
+  </div>
+
+  <div class="page-head" id="page-head">
+    <h1>Engineering Works</h1>
+    <p>Documents, decks, visuals, and videos &mdash; click any tile to view it here.</p>
+  </div>
+
+  <main id="grid-view">
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <section class="viewer" id="viewer">
+    <div class="viewer-bar">
+      <button class="back-btn" id="back-btn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+      </button>
+      <span class="viewer-title" id="viewer-title"></span>
+      <button class="fs-btn" id="fs-btn" aria-label="Toggle full screen" title="Full screen">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        <span>Full screen</span>
+      </button>
+    </div>
+    <div class="viewer-stage" id="viewer-stage"></div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script>
+    /* ----- Theme (day / night / auto) ----- */
+    (function () {
+      var DAY_START = 7, NIGHT_START = 19;
+      function resolved(mode){
+        if (mode === "day" || mode === "night") return mode;
+        var h = new Date().getHours();
+        return (h >= DAY_START && h < NIGHT_START) ? "day" : "night";
+      }
+      function getMode(){ try { return localStorage.getItem("themeMode") || "auto"; } catch(e){ return "auto"; } }
+      function apply(mode){
+        document.documentElement.setAttribute("data-theme", resolved(mode));
+        document.querySelectorAll(".theme-toggle button").forEach(function(b){
+          b.classList.toggle("active", b.dataset.mode === mode);
+        });
+      }
+      document.querySelectorAll(".theme-toggle button").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var m = btn.dataset.mode;
+          try { localStorage.setItem("themeMode", m); } catch(e){}
+          apply(m);
+        });
+      });
+      apply(getMode());
+      setInterval(function(){ if (getMode() === "auto") apply("auto"); }, 60000);
+    })();
+
+    /* ----- Files in the media folder ----- */
+    var FILES = [
+      { title: "Evolution of Your Feed", desc: "Video walkthrough of how the feed evolved over time.", type: "video", label: "Video", src: "../media/Evolution_of_Your_Feed.mp4" },
+      { title: "INCOSE Ch.1 — ASEP Study Guide", desc: "Systems engineering study notes covering chapter 1.", type: "doc", label: "Word document", src: "../media/INCOSE Ch1 ASEP Study Guide.docx" },
+      { title: "INCOSE Ch.2 — ASEP Study Guide", desc: "Systems engineering study notes covering chapter 2.", type: "doc", label: "Word document", src: "../media/INCOSE Ch2 ASEP Study Guide.docx" },
+      { title: "Local Video Feed — Development Journey", desc: "Infographic mapping out the development journey.", type: "image", label: "Image", src: "../media/Local_Video_Feed_Development_Journey.png" },
+      { title: "Local Video Feed — Evolution", desc: "Full write-up of the feed's evolution as a PDF.", type: "pdf", label: "PDF", src: "../media/Local_Video_Feed_Evolution.pdf" },
+      { title: "Local Video Feed — Evolution (Slides)", desc: "Presentation deck on the feed's evolution.", type: "slides", label: "Slides", src: "assets/Local_Video_Feed_Evolution_slides.pdf" },
+      { title: "Private Video Feed Management App", desc: "Concept and architecture overview image.", type: "image", label: "Image", src: "../media/Private_Video_Feed_Management_App.png" },
+      { title: "Version Release Tracker", desc: "Release history and version-tracking document.", type: "doc", label: "Word document", src: "../media/Version_Release_Tracker.docx" }
+    ];
+
+    var ICONS = {
+      image:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+      video:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg>',
+      pdf:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>',
+      doc:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13l1.2 4 1.3-4 1.3 4L15 13"/></svg>',
+      slides: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/></svg>'
+    };
+
+    var grid = document.getElementById("grid");
+    FILES.forEach(function (f, i) {
+      var btn = document.createElement("button");
+      btn.className = "tile t-" + f.type;
+      btn.innerHTML =
+        '<span class="icon">' + ICONS[f.type] + '</span>' +
+        '<h2>' + f.title + '</h2>' +
+        '<p>' + f.desc + '</p>' +
+        '<span class="badge">' + f.label + '</span>';
+      btn.addEventListener("click", function () { openViewer(i); });
+      grid.appendChild(btn);
+    });
+
+    var viewer = document.getElementById("viewer");
+    var gridView = document.getElementById("grid-view");
+    var pageHead = document.getElementById("page-head");
+    var stage = document.getElementById("viewer-stage");
+    var vTitle = document.getElementById("viewer-title");
+
+    function openViewer(i) {
+      var f = FILES[i];
+      var url = encodeURI(f.src);
+      vTitle.textContent = f.title;
+      stage.innerHTML = "";
+
+      if (f.type === "image") {
+        var img = document.createElement("img");
+        img.className = "v-img";
+        img.src = url; img.alt = f.title;
+        img.oncontextmenu = function () { return false; };
+        stage.appendChild(img);
+      } else if (f.type === "video") {
+        var v = document.createElement("video");
+        v.className = "v-video";
+        v.src = url; v.controls = true;
+        v.setAttribute("controlsList", "nodownload");
+        v.setAttribute("disablePictureInPicture", "");
+        v.setAttribute("playsinline", "");
+        v.oncontextmenu = function () { return false; };
+        stage.appendChild(v);
+      } else if (f.type === "pdf" || f.type === "slides") {
+        var fr = document.createElement("iframe");
+        fr.className = "v-frame";
+        fr.src = url + "#toolbar=0&navpanes=0";
+        fr.title = f.title;
+        stage.appendChild(fr);
+      } else if (f.type === "doc") {
+        renderDoc(url);
+      }
+
+      pageHead.style.display = "none";
+      gridView.style.display = "none";
+      viewer.classList.add("open");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderDoc(url) {
+      var wrap = document.createElement("div");
+      wrap.className = "doc-scroll";
+      wrap.innerHTML = '<div class="v-msg">Loading document…</div>';
+      stage.appendChild(wrap);
+      fetch(url)
+        .then(function (r) { if (!r.ok) throw new Error("fetch"); return r.arrayBuffer(); })
+        .then(function (buf) { return mammoth.convertToHtml({ arrayBuffer: buf }); })
+        .then(function (res) { wrap.innerHTML = '<div class="doc-page">' + res.value + '</div>'; })
+        .catch(function () {
+          wrap.innerHTML = '<div class="v-msg">This document can\'t be rendered when the page is opened directly from your file system (browsers block reading local files). It will display correctly once the site is served over the web (e.g. GitHub Pages) or via a local web server.</div>';
+        });
+    }
+
+    function closeViewer() {
+      viewer.classList.remove("open");
+      stage.innerHTML = "";
+      gridView.style.display = "";
+      pageHead.style.display = "";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.getElementById("back-btn").addEventListener("click", closeViewer);
+
+    /* ----- Full screen (all file types) ----- */
+    var fsBtn = document.getElementById("fs-btn");
+    fsBtn.addEventListener("click", function () {
+      var el = stage;
+      var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+      if (!fsEl) {
+        var req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+        if (req) req.call(el);
+      } else {
+        var exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+        if (exit) exit.call(document);
+      }
+    });
+
+    function syncFsLabel() {
+      var on = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      fsBtn.querySelector("span").textContent = on ? "Exit full screen" : "Full screen";
+    }
+    document.addEventListener("fullscreenchange", syncFsLabel);
+    document.addEventListener("webkitfullscreenchange", syncFsLabel);
+  </script>
+</body>
+</html>
