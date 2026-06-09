@@ -4,10 +4,12 @@
   var chapters = (window.SE_CHAPTERS || []).slice().sort(function (a, b) { return a.no - b.no; });
   var META = window.SE_META || {};
   var TOPICS = META.specialTopics || [];
+  var ABOUT_SUB = META.aboutSub || [];
   var PODS = META.podcasts || {};
-  var byId = {}, topicById = {};
+  var byId = {}, topicById = {}, aboutById = {};
   chapters.forEach(function (c) { byId[c.id] = c; });
   TOPICS.forEach(function (t) { topicById[t.id] = t; });
+  ABOUT_SUB.forEach(function (s) { aboutById[s.id] = s; });
 
   var content = document.getElementById("content");
   var rightRail = document.getElementById("right-rail");
@@ -16,6 +18,15 @@
   function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function slug(s, i) { return (s || "h").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + i; }
   function letter(i) { return String.fromCharCode(65 + i); }
+  function fmtTime(s) { if (!isFinite(s) || s < 0) s = 0; var m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ":" + (sec < 10 ? "0" : "") + sec; }
+  // breadcrumb that always starts with a link back to Overview
+  function crumb(items) {
+    var all = [{ label: "Overview", href: "#/overview" }].concat(items || []);
+    return '<div class="crumb">' + all.map(function (it, i) {
+      var sep = i ? ' &nbsp;&rsaquo;&nbsp; ' : '';
+      return sep + (it.href ? '<a href="' + it.href + '" style="color:inherit;text-decoration:none">' + esc(it.label) + '</a>' : esc(it.label));
+    }).join('') + '</div>';
+  }
 
   /* ---------------- Theme ---------------- */
   (function () {
@@ -44,7 +55,10 @@
       calendar: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
       badge: '<circle cx="12" cy="8" r="5"/><path d="M8.5 12.5L7 22l5-3 5 3-1.5-9.5"/>',
       play: '<path d="M7 4v16l13-8z" fill="currentColor" stroke="none"/>',
-      home: '<path d="M3 12l9-9 9 9M5 10v10h14V10"/>'
+      home: '<path d="M3 12l9-9 9 9M5 10v10h14V10"/>',
+      gauge: '<path d="M12 14l4-4M3.5 17a9 9 0 1 1 17 0z"/><circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none"/>',
+      layers: '<path d="M12 2l9 5-9 5-9-5z"/><path d="M3 12l9 5 9-5M3 17l9 5 9-5"/>',
+      clipboard: '<rect x="8" y="3" width="8" height="4" rx="1"/><path d="M9 5H6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3M9 12h6M9 16h4"/>'
     };
     return '<svg class="' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (p[name] || p.notes) + '</svg>';
   }
@@ -59,7 +73,8 @@
   ];
 
   function buildSidebar(section, chapterId) {
-    var h = '<a href="#/overview" data-k="overview">' + icon("home", "ni") + 'Overview</a>';
+    var h = '<a href="../engineeringWorks/index.html" style="opacity:.85"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Engineering Works</a>';
+    h += '<a href="#/overview" data-k="overview"' + (section === "" ? ' class="active"' : '') + '>' + icon("home", "ni") + 'Overview</a>';
     NAV.forEach(function (n) {
       h += '<a href="' + n.href + '" data-k="' + n.key + '"' + (n.key === section ? ' class="active"' : '') + '>' + icon(n.ic, "ni") + n.label + '</a>';
       if (n.key === "notes" && section === "notes") {
@@ -131,15 +146,31 @@
   }
 
   function pageAbout() {
-    content.innerHTML = '<div class="doc"><div class="crumb">Reference</div><h1>About the exam</h1>' +
+    var h = '<div class="doc">' + crumb([{ label: "About the exam" }]) + '<h1>About the exam</h1>' +
       '<p class="lede">What the INCOSE ASEP knowledge exam involves and how to prepare.</p>' +
-      '<div class="panel">' + (META.aboutExamHtml || "") + '</div></div>';
+      '<div class="panel">' + (META.aboutExamHtml || "") + '</div>';
+    if (ABOUT_SUB.length) {
+      h += '<h2 style="border:none">Companion references</h2>';
+      ABOUT_SUB.forEach(function (s) {
+        h += '<a class="topic-card" href="#/about/' + s.id + '"><div class="tc-icon">' + icon(s.icon || "star") + '</div>' +
+          '<div><h3>' + esc(s.title) + '</h3><p>' + esc(s.blurb) + '</p></div></a>';
+      });
+    }
+    h += '</div>';
+    content.innerHTML = h;
+    buildRightRail();
+  }
+
+  function pageAboutSub(s) {
+    content.innerHTML = '<div class="doc">' + crumb([{ label: "About the exam", href: "#/about" }, { label: s.title }]) +
+      '<h1>' + esc(s.title) + '</h1><p class="lede">' + esc(s.blurb) + '</p>' +
+      '<div class="panel">' + s.html + '</div></div>';
     buildRightRail();
   }
 
   function pageNotesLanding() {
     clearRightRail();
-    var h = '<div class="doc"><div class="crumb">INCOSE Handbook Notes</div><h1>Handbook notes</h1>';
+    var h = '<div class="doc">' + crumb([{ label: "Handbook Notes" }]) + '<h1>Handbook notes</h1>';
     h += '<p class="lede">Concept summaries condensed from the INCOSE Systems Engineering Handbook. Pick a chapter from the menu or a card below.</p>';
     h += '<div class="ov-grid">';
     chapters.forEach(function (c) {
@@ -150,7 +181,7 @@
   }
 
   function pageNotesChapter(c) {
-    var h = '<div class="doc"><div class="crumb">Handbook Notes &nbsp;&rsaquo;&nbsp; Chapter ' + c.no + '</div>';
+    var h = '<div class="doc">' + crumb([{ label: "Handbook Notes", href: "#/notes" }, { label: "Chapter " + c.no }]);
     h += '<h1>' + esc(c.title) + '</h1><p class="lede">' + esc(c.subtitle) + '</p>';
     h += '<div class="panel">' + c.notesHtml + '</div></div>';
     content.innerHTML = h;
@@ -159,9 +190,9 @@
 
   function pagePodcasts() {
     clearRightRail();
-    var h = '<div class="doc"><div class="crumb">Audio</div><h1>Podcasts</h1>';
+    var h = '<div class="doc">' + crumb([{ label: "Podcasts" }]) + '<h1>Podcasts</h1>';
     h += '<p class="lede">Audio walkthroughs for each chapter — a quick summary to revise fast, and a deep dive for the full picture.</p>';
-    var any = false;
+    var any = false, pid = 0;
     chapters.forEach(function (c) {
       var eps = PODS[String(c.no)] || [];
       h += '<div class="pod-ch"><h2>Chapter ' + c.no + ' — ' + esc(c.title) + '</h2>';
@@ -170,20 +201,75 @@
       h += '<div class="pc-sub">' + eps.length + ' episode' + (eps.length > 1 ? "s" : "") + '</div>';
       eps.forEach(function (ep) {
         var src = "audio/" + encodeURIComponent(ep.file);
-        h += '<div class="pod-ep"><div class="pe-icon">' + icon("play") + '</div>' +
-          '<div class="pe-meta"><div class="pe-label">' + esc(ep.label) + '</div><div class="pe-ch">Chapter ' + c.no + '</div></div>' +
-          '<audio controls preload="none" controlsList="nodownload" src="' + src + '"></audio></div>';
+        h += '<div class="pod-ep">' +
+          '<div class="pe-head"><div class="pe-icon">' + icon("pod") + '</div>' +
+          '<div><div class="pe-label">' + esc(ep.label) + '</div><div class="pe-ch">Chapter ' + c.no + '</div></div></div>' +
+          buildPlayer(src, pid++) + '</div>';
       });
       h += '</div>';
     });
     if (!any) h += '<p class="pod-empty">Drop chapter audio into the <code>audio/</code> folder to populate this page.</p>';
     h += '</div>';
     content.innerHTML = h;
+    content.querySelectorAll(".player").forEach(initPlayer);
+  }
+
+  function buildPlayer(src, id) {
+    var back = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4L4 9l7 5V4z" fill="currentColor" stroke="none"/><path d="M4 9a9 9 0 1 0 3-5"/></svg>';
+    var fwd = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4l7 5-7 5V4z" fill="currentColor" stroke="none"/><path d="M20 9a9 9 0 1 1-3-5"/></svg>';
+    return '<div class="player" data-id="' + id + '">' +
+      '<audio preload="metadata" src="' + src + '"></audio>' +
+      '<input type="range" class="pl-seek" min="0" max="1000" value="0" step="1" aria-label="Seek" />' +
+      '<div class="pl-row">' +
+      '<button class="pl-btn pl-play" aria-label="Play/pause">' + icon("play") + '</button>' +
+      '<button class="pl-btn pl-skip pl-back" aria-label="Back 10 seconds">' + back + '10</button>' +
+      '<button class="pl-btn pl-skip pl-fwd" aria-label="Forward 10 seconds">10' + fwd + '</button>' +
+      '<span class="pl-time">0:00 / 0:00</span>' +
+      '<span class="pl-grow"></span>' +
+      '<button class="pl-btn pl-speed" aria-label="Playback speed">1&times;</button>' +
+      '</div></div>';
+  }
+
+  function initPlayer(p) {
+    var audio = p.querySelector("audio");
+    var seek = p.querySelector(".pl-seek");
+    var playBtn = p.querySelector(".pl-play");
+    var timeEl = p.querySelector(".pl-time");
+    var speedBtn = p.querySelector(".pl-speed");
+    var seeking = false;
+    var speeds = [1, 1.25, 1.5, 2, 0.75], si = 0;
+    var playSvg = playBtn.innerHTML;
+    var pauseSvg = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+
+    function updTime() { timeEl.textContent = fmtTime(audio.currentTime) + " / " + fmtTime(audio.duration || 0); }
+    playBtn.addEventListener("click", function () {
+      if (audio.paused) {
+        // pause any other playing audio
+        document.querySelectorAll(".player audio").forEach(function (a) { if (a !== audio) a.pause(); });
+        audio.play();
+      } else audio.pause();
+    });
+    audio.addEventListener("play", function () { playBtn.innerHTML = pauseSvg; });
+    audio.addEventListener("pause", function () { playBtn.innerHTML = playSvg; });
+    audio.addEventListener("loadedmetadata", updTime);
+    audio.addEventListener("timeupdate", function () {
+      if (!seeking && audio.duration) seek.value = Math.round((audio.currentTime / audio.duration) * 1000);
+      updTime();
+    });
+    audio.addEventListener("ended", function () { playBtn.innerHTML = playSvg; });
+    seek.addEventListener("input", function () { seeking = true; if (audio.duration) timeEl.textContent = fmtTime(seek.value / 1000 * audio.duration) + " / " + fmtTime(audio.duration); });
+    seek.addEventListener("change", function () { if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration; seeking = false; });
+    p.querySelector(".pl-back").addEventListener("click", function () { audio.currentTime = Math.max(0, audio.currentTime - 10); });
+    p.querySelector(".pl-fwd").addEventListener("click", function () { audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10); });
+    speedBtn.addEventListener("click", function () { si = (si + 1) % speeds.length; audio.playbackRate = speeds[si]; speedBtn.innerHTML = speeds[si] + "&times;"; });
+    audio.addEventListener("error", function () {
+      p.innerHTML = '<p class="pod-empty">This episode can\'t be loaded right now. Make sure the audio file is present and the site is served over the web.</p>';
+    });
   }
 
   function pageTopicsLanding() {
     clearRightRail();
-    var h = '<div class="doc"><div class="crumb">Special Topics</div><h1>Special topics</h1>';
+    var h = '<div class="doc">' + crumb([{ label: "Special Topics" }]) + '<h1>Special topics</h1>';
     h += '<p class="lede">Supplementary study material beyond the chapter notes.</p>';
     TOPICS.forEach(function (t) {
       h += '<a class="topic-card" href="#/topics/' + t.id + '"><div class="tc-icon">' + icon(t.icon || "star") + '</div>' +
@@ -193,7 +279,7 @@
   }
 
   function pageTopic(t) {
-    content.innerHTML = '<div class="doc"><div class="crumb"><a href="#/topics" style="color:inherit">Special Topics</a> &nbsp;&rsaquo;&nbsp; ' + esc(t.title) + '</div>' +
+    content.innerHTML = '<div class="doc">' + crumb([{ label: "Special Topics", href: "#/topics" }, { label: t.title }]) +
       '<h1>' + esc(t.title) + '</h1><p class="lede">' + esc(t.blurb) + '</p>' +
       '<div class="panel">' + t.html + '</div></div>';
     buildRightRail();
@@ -211,7 +297,7 @@
   }
 
   function renderSetup() {
-    var h = '<div class="doc"><div class="crumb">Practice</div><h1>Practice questions</h1>';
+    var h = '<div class="doc">' + crumb([{ label: "Practice" }]) + '<h1>Practice questions</h1>';
     h += '<p class="lede">Choose chapters and how many questions, answer at your own pace, and submit whenever you like — you don\'t have to finish them all.</p>';
     h += '<div class="panel quiz-setup">';
     h += '<label>Chapters</label><div class="chips" id="q-chapters">';
@@ -393,7 +479,11 @@
     var sec = parts[0];
 
     if (sec === "overview") { buildSidebar(""); pageOverview(); }
-    else if (sec === "about") { buildSidebar("about"); pageAbout(); }
+    else if (sec === "about") {
+      buildSidebar("about");
+      if (parts[1] && aboutById[parts[1]]) pageAboutSub(aboutById[parts[1]]);
+      else pageAbout();
+    }
     else if (sec === "exam") { pageExamRedirect(); return; }
     else if (sec === "podcasts") { buildSidebar("podcasts"); pagePodcasts(); }
     else if (sec === "topics") {

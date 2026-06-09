@@ -30,12 +30,14 @@
       --warn: #b9820a; --sel-bg: rgba(106,92,255,0.12);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
+    html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+    html, body { max-width:100%; overflow-x:hidden; }
     body {
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       color:var(--text); min-height:100vh; background:var(--bg-gradient); background-size:400% 400%;
       animation:grad 20s ease infinite; transition:color .4s ease;
     }
+    .doc { overflow-wrap:break-word; word-break:break-word; }
     @keyframes grad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
     /* Top bar */
@@ -43,14 +45,18 @@
       padding:12px clamp(14px,3vw,28px); background:var(--panel); border-bottom:1px solid var(--divider);
       backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
     .se-back { display:inline-flex; align-items:center; gap:7px; text-decoration:none; color:var(--text);
-      font-weight:600; font-size:.9rem; padding:8px 13px; border-radius:999px; background:var(--card-bg); border:1px solid var(--card-border); }
+      font-weight:600; font-size:.9rem; padding:8px 13px; border-radius:999px; background:var(--card-bg); border:1px solid var(--card-border); flex-shrink:0; }
     .se-back:hover { transform:translateX(-2px); }
-    .se-brand { font-weight:800; font-size:1.02rem; letter-spacing:-.3px; }
+    .se-brand { font-weight:800; font-size:1.02rem; letter-spacing:-.3px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
     .se-brand span { background:linear-gradient(90deg,#a18cd1,#84fab0); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-    .se-spacer { flex:1; }
-    .menu-btn, .right-btn { display:none; width:40px; height:40px; align-items:center; justify-content:center; border:none; cursor:pointer;
-      border-radius:10px; background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); }
-    .menu-btn svg, .right-btn svg { width:22px; height:22px; }
+    .se-spacer { flex:1; min-width:8px; }
+    .menu-btn { display:none; width:40px; height:40px; align-items:center; justify-content:center; border:none; cursor:pointer;
+      border-radius:10px; background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); flex-shrink:0; }
+    .menu-btn svg { width:23px; height:23px; }
+    .right-btn { display:none; align-items:center; gap:6px; height:40px; padding:0 13px; border:none; cursor:pointer;
+      border-radius:999px; background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); font:inherit; font-weight:600; font-size:.84rem; flex-shrink:0; }
+    .right-btn svg { width:18px; height:18px; }
+    .rb-label { display:inline; }
     .theme-toggle { display:flex; gap:2px; padding:3px; border-radius:999px; background:var(--card-bg); border:1px solid var(--card-border); }
     .theme-toggle button { width:32px; height:32px; display:flex; align-items:center; justify-content:center; border:none; background:transparent;
       border-radius:50%; cursor:pointer; color:var(--text-dim); }
@@ -187,16 +193,25 @@
     .pod-ch { margin-bottom:26px; }
     .pod-ch h2 { font-size:1.25rem; font-weight:750; margin-bottom:4px; }
     .pod-ch .pc-sub { color:var(--text-dim); font-size:.9rem; margin-bottom:14px; }
-    .pod-ep { display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--panel); border:1px solid var(--card-border);
-      border-radius:14px; padding:14px 16px; margin-bottom:12px; }
-    .pod-ep .pe-icon { width:42px; height:42px; flex-shrink:0; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    .pod-ep { background:var(--panel); border:1px solid var(--card-border); border-radius:14px; padding:16px; margin-bottom:12px; }
+    .pe-head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .pe-icon { width:42px; height:42px; flex-shrink:0; border-radius:11px; display:flex; align-items:center; justify-content:center;
       background:linear-gradient(135deg,#7873f5,#4facfe); color:#fff; }
-    .pod-ep .pe-icon svg { width:22px; height:22px; }
-    .pod-ep .pe-meta { min-width:120px; }
-    .pod-ep .pe-label { font-weight:700; font-size:.98rem; }
-    .pod-ep .pe-ch { font-size:.78rem; color:var(--text-dim); }
-    .pod-ep audio { flex:1; min-width:220px; height:40px; }
+    .pe-icon svg { width:22px; height:22px; }
+    .pe-label { font-weight:700; font-size:1rem; }
+    .pe-ch { font-size:.78rem; color:var(--text-dim); }
     .pod-empty { color:var(--text-dim); font-size:.92rem; }
+    /* Custom audio player */
+    .player .pl-seek { width:100%; height:6px; margin:2px 0 10px; cursor:pointer; accent-color:#7873f5; }
+    .pl-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .pl-btn { cursor:pointer; border:1px solid var(--card-border); background:var(--panel-2); color:var(--text); border-radius:10px;
+      height:40px; min-width:40px; padding:0 11px; font:inherit; font-weight:700; font-size:.82rem; display:inline-flex; align-items:center; justify-content:center; gap:5px; }
+    .pl-btn:active { transform:scale(.95); }
+    .pl-btn svg { width:18px; height:18px; }
+    .pl-play { background:linear-gradient(135deg,#7873f5,#4facfe); color:#fff; border:none; min-width:52px; }
+    .pl-skip { position:relative; font-size:.7rem; }
+    .pl-time { font-variant-numeric:tabular-nums; font-size:.82rem; color:var(--text-dim); white-space:nowrap; }
+    .pl-grow { flex:1; min-width:6px; }
 
     /* Topic + chapter cards */
     .topic-card { display:flex; align-items:flex-start; gap:16px; text-decoration:none; color:var(--text); background:var(--panel);
@@ -220,33 +235,44 @@
       .se-right { position:fixed; top:0; right:0; bottom:0; height:100dvh; width:min(82vw,300px); z-index:46; padding:64px 18px 24px;
         background:var(--panel); border-left:1px solid var(--divider); overflow-y:auto; transform:translateX(106%); transition:transform .3s ease; }
       .se-right.open { transform:translateX(0); box-shadow:0 0 44px rgba(0,0,0,.5); }
-      body.has-rail .right-btn { display:flex; }
+      body.has-rail .right-btn { display:inline-flex; }
     }
     @media (max-width:840px){
+      .se-topbar { gap:10px; padding:10px 14px; }
       .se-layout { grid-template-columns:1fr; }
       .menu-btn { display:flex; }
+      .se-back { display:none; }
+      .se-content-wrap { padding:20px 16px 90px; gap:24px; }
       .se-sidebar { position:fixed; top:0; left:0; bottom:0; height:100dvh; width:min(82vw,300px); z-index:46; background:var(--panel);
-        border-right:1px solid var(--divider); transform:translateX(-104%); transition:transform .3s ease; }
+        border-right:1px solid var(--divider); transform:translateX(-104%); transition:transform .3s ease; padding-top:20px; }
       .se-sidebar.open { transform:translateX(0); box-shadow:0 0 44px rgba(0,0,0,.5); }
       .sb-stats { grid-template-columns:repeat(2,1fr); }
+      .doc h1 { font-size:1.55rem; }
+      .ov-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:520px){
+      .rb-label { display:none; }
+      .se-brand { font-size:.95rem; }
+      .right-btn { padding:0; width:40px; justify-content:center; }
+      .pl-time { width:100%; order:5; }
     }
   </style>
 </head>
 <body>
   <header class="se-topbar">
+    <button class="menu-btn" id="menu-btn" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
     <a class="se-back" href="../engineeringWorks/index.html">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
       Engineering
     </a>
-    <div class="se-brand"><span>Systems Engineering</span> Study Hub</div>
+    <div class="se-brand" id="brand"><span>Systems Engineering</span> Study Hub</div>
     <div class="se-spacer"></div>
     <div class="theme-toggle" role="group" aria-label="Color theme">
       <button data-mode="day" aria-label="Day" title="Day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
       <button data-mode="auto" aria-label="Auto" title="Auto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></svg></button>
       <button data-mode="night" aria-label="Night" title="Night"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
     </div>
-    <button class="right-btn" id="right-btn" aria-label="On this page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
-    <button class="menu-btn" id="menu-btn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <button class="right-btn" id="right-btn" aria-label="On this page"><span class="rb-label">On this page</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
   </header>
 
   <div class="sb-backdrop" id="sb-backdrop"></div>
