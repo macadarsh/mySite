@@ -11,15 +11,21 @@
       --bg-gradient: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #6a3093, #1a2980);
       --card-bg: rgba(255, 255, 255, 0.08);
       --card-border: rgba(255, 255, 255, 0.18);
-      --text: #f5f6ff; --text-dim: rgba(245, 246, 255, 0.7);
-      --panel: rgba(20, 18, 45, 0.96); --fav-bg: rgba(255,255,255,0.9);
+      --divider: rgba(255, 255, 255, 0.16);
+      --fav-bg: rgba(255, 255, 255, 0.92);
+      --nav-active: rgba(255, 255, 255, 0.12);
+      --panel-solid: #1b1830;
+      --text: #f5f6ff; --text-dim: rgba(245, 246, 255, 0.68);
     }
     [data-theme="day"] {
       --bg-gradient: linear-gradient(-45deg, #c4b5fd, #e9c5f0, #c6dcf7, #bdf0d6, #f7d6c4);
-      --card-bg: rgba(255, 255, 255, 0.4);
+      --card-bg: rgba(255, 255, 255, 0.42);
       --card-border: rgba(255, 255, 255, 0.65);
+      --divider: rgba(44, 35, 86, 0.18);
+      --fav-bg: #ffffff;
+      --nav-active: rgba(255, 255, 255, 0.6);
+      --panel-solid: #efe9fb;
       --text: #2c2356; --text-dim: rgba(44, 35, 86, 0.7);
-      --panel: rgba(255, 255, 255, 0.97); --fav-bg: rgba(255,255,255,0.95);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -41,7 +47,7 @@
     .theme-toggle button:hover { color:var(--text); }
     .theme-toggle button.active { color:#fff; background:linear-gradient(135deg,#ff6ec4,#7873f5); box-shadow:0 4px 14px rgba(120,115,245,.45); }
 
-    .page-head { text-align:center; padding:8px 24px 22px; }
+    .page-head { text-align:center; padding:8px 24px 20px; }
     .page-head h1 { font-size:clamp(2rem,5vw,3rem); font-weight:800; letter-spacing:-1px; background:linear-gradient(90deg,#ff9a9e,#fad0c4,#a18cd1,#84fab0); background-size:200% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shimmer 6s linear infinite; }
     @keyframes shimmer { to { background-position:200% center; } }
     .page-head p { margin-top:12px; color:var(--text-dim); font-size:1.02rem; }
@@ -51,33 +57,78 @@
     .search-wrap input::placeholder { color:var(--text-dim); }
     .search-wrap input:focus { border-color:rgba(255,255,255,.45); }
 
-    main { flex:1; width:100%; max-width:1080px; margin:0 auto; padding:24px clamp(20px,5vw,48px) 70px; }
-    .category { margin-bottom:40px; }
-    .cat-head { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+    .layout { display:flex; align-items:flex-start; gap:28px; width:100%; max-width:1200px; margin:0 auto; padding:24px clamp(20px,5vw,48px) 70px; }
+    main { flex:1; min-width:0; }
+
+    .category { margin-bottom:42px; scroll-margin-top:24px; }
+    .cat-head { display:flex; align-items:center; gap:12px; margin-bottom:4px; }
     .cat-dot { width:14px; height:14px; border-radius:5px; flex-shrink:0; }
     .cat-head h2 { font-size:1.35rem; font-weight:700; }
     .cat-count { font-size:.85rem; color:var(--text-dim); font-weight:500; }
-    .cat-note { color:var(--text-dim); font-size:.9rem; margin:0 0 14px 26px; }
-    .cat-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr)); gap:12px; margin-top:12px; }
+    .cat-note { color:var(--text-dim); font-size:.9rem; margin:0 0 6px 26px; }
+    .cat-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(265px,1fr)); gap:14px; margin-top:14px; }
 
-    .link-item { display:flex; align-items:center; gap:11px; text-decoration:none; color:var(--text); padding:12px 14px; border-radius:14px; background:var(--card-bg); border:1px solid var(--card-border); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); overflow:hidden; position:relative; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+    .link-item { display:flex; flex-direction:row; align-items:flex-start; gap:14px; text-decoration:none; color:var(--text); padding:16px 18px; border-radius:14px; background:var(--card-bg); border:1px solid var(--card-border); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); position:relative; overflow:hidden; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
     .link-item::before { content:""; position:absolute; inset:0; background:var(--accent); opacity:0; transition:opacity .2s ease; }
     .link-item:hover { transform:translateY(-3px); border-color:rgba(255,255,255,.4); box-shadow:0 10px 24px rgba(0,0,0,.3); }
-    .link-item:hover::before { opacity:.14; }
+    .link-item:hover::before { opacity:.12; }
     .link-item > * { position:relative; z-index:1; }
-    .fav { width:30px; height:30px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:var(--fav-bg); overflow:hidden; }
-    .fav img { width:20px; height:20px; object-fit:contain; }
-    .fav .mono { display:none; width:100%; height:100%; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:.95rem; background:var(--accent); }
+    .fav { width:54px; height:54px; border-radius:13px; flex-shrink:0; margin-top:2px; display:flex; align-items:center; justify-content:center; background:var(--fav-bg); overflow:hidden; }
+    .fav img { width:36px; height:36px; object-fit:contain; }
+    .fav .mono { display:none; width:100%; height:100%; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1.5rem; background:var(--accent); }
     .fav.noimg { background:transparent; }
     .fav.noimg img { display:none; }
     .fav.noimg .mono { display:flex; }
-    .lname { font-size:.92rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .link-body { flex:1; min-width:0; display:flex; flex-direction:column; }
+    .lname { font-weight:700; font-size:1rem; line-height:1.3; }
+    .ldiv { height:1px; background:var(--divider); margin:10px 0; }
+    .ldesc { font-size:.85rem; color:var(--text-dim); line-height:1.45; }
 
     .no-results { text-align:center; color:var(--text-dim); padding:40px; display:none; }
 
-    #tip { position:fixed; z-index:200; display:none; max-width:280px; padding:11px 14px; border-radius:12px; background:var(--panel); border:1px solid var(--card-border); color:var(--text); font-size:.86rem; line-height:1.45; box-shadow:0 12px 34px rgba(0,0,0,.4); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); pointer-events:none; }
+    /* Left sidebar column (desktop: in-flow, never overlaps) */
+    .cat-nav { position:sticky; top:24px; align-self:flex-start; width:216px; flex-shrink:0; max-height:calc(100vh - 48px); overflow-y:auto; padding:16px; border-radius:16px; background:var(--card-bg); border:1px solid var(--card-border); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); opacity:0; visibility:hidden; transform:translateX(-8px); transition:opacity .3s ease, transform .3s ease, visibility .3s ease; }
+    .cat-nav.visible { opacity:1; visibility:visible; transform:translateX(0); }
+    .cat-nav .nav-title { font-size:.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin:2px 8px 12px; }
+    .cat-nav a { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; text-decoration:none; color:var(--text-dim); font-size:.88rem; font-weight:600; transition:background .2s ease, color .2s ease; }
+    .cat-nav a:hover, .cat-nav a.active { color:var(--text); background:var(--nav-active); }
+    .cat-nav .nav-dot { width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+    .cat-nav .nav-name { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-    @media (max-width:480px){ .cat-grid{ grid-template-columns:1fr 1fr; } .topbar{ flex-wrap:wrap; } }
+    /* Floating circular buttons */
+    .to-top, .nav-toggle {
+      position:fixed; bottom:20px; z-index:120; width:52px; height:52px;
+      display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; border-radius:50%; color:#fff;
+      opacity:0; visibility:hidden; transform:translateY(10px);
+      transition:opacity .3s ease, transform .3s ease, visibility .3s ease;
+    }
+    .to-top { right:20px; background:linear-gradient(135deg,#ff6ec4,#7873f5); box-shadow:0 6px 20px rgba(120,115,245,.5); }
+    .nav-toggle { left:20px; display:none; background:linear-gradient(135deg,#7873f5,#4facfe); box-shadow:0 6px 20px rgba(79,172,254,.5); }
+    .to-top.visible, .nav-toggle.visible { opacity:1; visibility:visible; transform:translateY(0); }
+    .to-top:hover, .nav-toggle:hover { filter:brightness(1.08); }
+    .to-top svg { width:22px; height:22px; }
+    .nav-toggle svg { width:24px; height:24px; }
+
+    .nav-backdrop { position:fixed; inset:0; z-index:115; background:rgba(0,0,0,.5); opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s ease; }
+    .nav-backdrop.open { opacity:1; visibility:visible; }
+
+    /* Mobile: sidebar becomes an off-canvas drawer toggled by the hamburger */
+    @media (max-width:900px){
+      .layout{ padding-top:18px; }
+      .cat-nav, .cat-nav.visible {
+        position:fixed; top:0; left:0; bottom:0; height:100dvh; z-index:125;
+        width:min(82vw,300px); max-height:none; align-self:auto;
+        border-radius:0 18px 18px 0; padding:20px;
+        background:var(--panel-solid);
+        opacity:1; visibility:visible;
+        transform:translateX(-106%);
+        transition:transform .32s ease;
+      }
+      .cat-nav.open { transform:translateX(0); box-shadow:0 0 44px rgba(0,0,0,.55); }
+      .nav-toggle { display:flex; }
+    }
+    @media (min-width:901px){ .nav-backdrop, .nav-toggle { display:none; } }
+    @media (max-width:520px){ .cat-grid{ grid-template-columns:1fr; } .topbar{ flex-wrap:wrap; } }
   </style>
 </head>
 <body>
@@ -95,13 +146,23 @@
 
   <div class="page-head">
     <h1>Links</h1>
-    <p>A curated directory of useful sites &mdash; hover or long-press any link for a quick description.</p>
+    <p>A curated directory of useful sites, grouped into a few simple categories.</p>
   </div>
   <div class="search-wrap"><input id="search" type="search" placeholder="Search all links..." autocomplete="off" /></div>
 
-  <main id="main"></main>
+  <div class="layout">
+    <nav class="cat-nav" id="cat-nav" aria-label="Categories"></nav>
+    <main id="main"></main>
+  </div>
   <p class="no-results" id="no-results">No links match your search.</p>
-  <div id="tip"></div>
+
+  <div class="nav-backdrop" id="nav-backdrop"></div>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Show categories" title="Categories">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <button class="to-top" id="to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
 
   <script>
     (function () {
@@ -114,16 +175,19 @@
       setInterval(function(){ if(getMode()==="auto") apply("auto"); },60000);
     })();
 
-    var DATA = [{"key": "learn", "title": "Online Learning", "accent": "linear-gradient(135deg,#36d1dc,#5b86e5)", "note": "", "items": [{"name": "Modern Robotics", "url": "http://hades.mech.northwestern.edu/index.php/Modern_Robotics", "desc": "Northwestern University robotics textbook and software"}, {"name": "Introduction to Robotics", "url": "https://see.stanford.edu/Course/CS223A", "desc": "Stanford CS223A robotics course materials"}, {"name": "Robotics | edX", "url": "https://www.edx.org/micromasters/pennx-robotics", "desc": "Penn robotics MicroMasters program on edX"}, {"name": "Introduction to Haptics | Stanford Lagunita", "url": "https://lagunita.stanford.edu/courses/SelfPaced/Haptics/2014/about", "desc": "Stanford course on haptic interfaces and feedback"}, {"name": "Dashboard | Stanford Lagunita", "url": "https://lagunita.stanford.edu/dashboard", "desc": "Stanford Lagunita course dashboard portal"}, {"name": "other resources", "url": "http://hapkit.stanford.edu/resources.html", "desc": "Additional haptics learning resources from Stanford"}, {"name": "Hapkit", "url": "http://hapkit.stanford.edu/", "desc": "Haptic device kit for Stanford haptics course"}, {"name": "Udacity", "url": "https://www.udacity.com/", "desc": "Tech and programming nanodegree courses with industry projects"}, {"name": "Skill Share", "url": "https://www.skillshare.com/", "desc": "Creative classes in design, illustration, photography and more"}, {"name": "Brilliant", "url": "https://brilliant.org/", "desc": "Interactive math, science and computer science courses"}, {"name": "MIT", "url": "https://ocw.mit.edu/", "desc": "Free university-level courses from MIT OpenCourseWare"}, {"name": "Udemy", "url": "https://www.udemy.com/", "desc": "Marketplace for online courses on a wide range of topics"}, {"name": "Unacademy", "url": "https://unacademy.com/", "desc": "Indian education platform with live classes and test prep"}, {"name": "NPTEL", "url": "https://nptel.ac.in/", "desc": "Free engineering and science video lectures from IITs and IISc"}, {"name": "Swayam", "url": "https://swayam.gov.in/", "desc": "Indian government platform for free university-level courses"}, {"name": "Khan Academy", "url": "https://www.khanacademy.org/", "desc": "Free courses in math, science, computing and test prep"}, {"name": "3DEXPERIENCE Edu SPACE", "url": "https://edu.3ds.com/", "desc": "Dassault Systèmes educational platform for 3D design and engineering"}, {"name": "STANFORD LAGUNITA", "url": "https://lagunita.stanford.edu/", "desc": "Stanford University free online courses platform (archived)"}, {"name": "Stanford Online", "url": "https://online.stanford.edu/", "desc": "Stanford professional and academic online courses and certificates"}, {"name": "edX", "url": "https://www.edx.org/", "desc": "University-level courses from top institutions worldwide"}, {"name": "Coursera", "url": "https://www.coursera.org/", "desc": "Online degrees and professional certificates from top universities"}, {"name": "NIELIT e-Learning portal", "url": "https://elearn.nielit.gov.in/", "desc": "Indian government IT literacy and e-learning portal"}]}, {"key": "eng", "title": "Engineering Tools & References", "accent": "linear-gradient(135deg,#11998e,#38ef7d)", "note": "", "items": [{"name": "Engineering ToolBox", "url": "http://www.engineeringtoolbox.com/", "desc": "Reference tables and calculators for engineering"}, {"name": "Virtual Lab", "url": "http://iitkgp.vlab.co.in/", "desc": "IIT KGP virtual laboratory simulations"}, {"name": "ME Concepts Simplified", "url": "http://www.mesubjects.net/", "desc": "Simplified mechanical engineering concepts and tutorials"}, {"name": "LearnThermo", "url": "http://www.learnthermo.com/T1-tutorial/ch02/lesson-A/pg03.php", "desc": "Interactive thermodynamics tutorials and examples"}, {"name": "Animated Engines", "url": "http://www.animatedengines.com/", "desc": "Animated illustrations of engine mechanisms"}, {"name": "ThermoPedia", "url": "http://www.thermopedia.com/", "desc": "Encyclopedia of thermal and fluids engineering"}, {"name": "Fluid Property Calculator", "url": "https://www.irc.wisc.edu/properties/", "desc": "Online calculator for fluid thermodynamic properties"}, {"name": "Elasticity(JjC)", "url": "http://solidmechanics.org/Text/Chapter3_2/Chapter3_2.php", "desc": "Solid mechanics and elasticity reference material"}, {"name": "Machine Screws Calculator", "url": "https://precisionmindsetllc.com/Calculators/MachineScrews/machine-screw-thread-shear.html", "desc": "Thread shear strength calculator for machine screws"}, {"name": "Four Bar Linkage Mechanism", "url": "http://www.mekanizmalar.com/four-bar-mechanism.html", "desc": "Interactive four-bar mechanism simulator"}, {"name": "IESNA and NEMA Light Distribution Types", "url": "https://www.superbrightleds.com/blog/iesna-and-nema-light-distribution-types.html", "desc": "Guide to lighting distribution classifications"}, {"name": "The Antenna Theory Website", "url": "https://www.antenna-theory.com/", "desc": "Comprehensive reference on antenna design theory"}, {"name": "Antenna Theory - Quick Guide", "url": "https://www.tutorialspoint.com/antenna_theory/antenna_theory_quick_guide.htm", "desc": "Concise tutorial on antenna fundamentals"}]}, {"key": "code", "title": "Coding & Interview Prep", "accent": "linear-gradient(135deg,#ee0979,#ff6a00)", "note": "", "items": [{"name": "JobTestPrep", "url": "https://www.jobtestprep.com/", "desc": "Practice tests for job aptitude assessments"}, {"name": "Youth4work PREP", "url": "https://www.prep.youth4work.com/", "desc": "Online test prep platform for competitive exams"}, {"name": "CareerCup", "url": "https://www.careercup.com/", "desc": "Interview questions from top tech companies"}, {"name": "LeetCode", "url": "https://leetcode.com/", "desc": "Coding interview prep with algorithm challenges"}, {"name": "HackerRank", "url": "https://www.hackerrank.com/", "desc": "Competitive programming and coding skill challenges"}, {"name": "Codeforces", "url": "http://codeforces.com/", "desc": "Competitive programming contests and problems"}, {"name": "InterviewBit", "url": "https://www.interviewbit.com/", "desc": "Structured coding interview preparation platform"}, {"name": "Aptitude-Test.com", "url": "https://www.aptitude-test.com/", "desc": "Free online aptitude tests and practice papers"}, {"name": "Bulls Eye", "url": "https://www.hitbullseye.com/?loggedout", "desc": "MBA and competitive exam preparation resources"}, {"name": "Gradeup", "url": "https://gradeup.co/", "desc": "Exam prep for GATE, banking, and government tests"}, {"name": "CCC Practice Test", "url": "https://cccpracticetest.com/", "desc": "Canadian citizenship test practice questions"}, {"name": "Interview Text", "url": "http://cdc.iitkgp.ac.in/preparations/", "desc": "CDC text-based interview preparation resources"}, {"name": "Interview Video", "url": "http://www.cdc.iitkgp.ac.in/video-library/", "desc": "CDC video library for interview preparation"}]}, {"key": "research", "title": "Research & Knowledge", "accent": "linear-gradient(135deg,#f7971e,#ffd200)", "note": "", "items": [{"name": "Science | AAAS", "url": "https://www.science.org/", "desc": "Peer-reviewed journal for scientific research articles"}, {"name": "Tutorvista", "url": "https://formulas.tutorvista.com/", "desc": "Math and science formulas reference"}, {"name": "Human Biodigital", "url": "https://human.biodigital.com/", "desc": "Visualize anatomy, disease, and treatments in interactive 3D"}, {"name": "Wikipedia", "url": "https://en.wikipedia.org/wiki/Main_Page", "desc": "Free online encyclopedia built by community contributors"}, {"name": "ResearchGate", "url": "https://www.researchgate.net/", "desc": "Academic social network for researchers and scientists"}]}, {"key": "puzzle", "title": "Puzzles & Brain Teasers", "accent": "linear-gradient(135deg,#8e2de2,#4a00e0)", "note": "", "items": [{"name": "Gurmeet.Net", "url": "https://gurmeet.net/", "desc": "Math puzzles, algorithms, and programming challenges"}, {"name": "Puzzling Stack Exchange", "url": "https://puzzling.stackexchange.com/", "desc": "Community Q&A for puzzle enthusiasts"}, {"name": "MindYourDecisions", "url": "https://www.youtube.com/user/MindYourDecisions", "desc": "YouTube channel on math puzzles and game theory"}, {"name": "LOGICALLY YOURS", "url": "https://www.youtube.com/channel/UCTRxnMudmOGNw0g4gZf5D8g", "desc": "YouTube channel for logical reasoning puzzles"}, {"name": "Puzzle Blog", "url": "http://puzzle-a-day.blogspot.com/?view=magazine", "desc": "Daily puzzle blog with brain teasers"}, {"name": "Interview Puzzles", "url": "http://how-to-crack-the-interview.blogspot.com/2008_04_01_archive.html", "desc": "Collection of puzzles commonly asked in interviews"}, {"name": "Ultimate Puzzle and Riddles", "url": "http://www.puzzlesite.nl/index_us.html", "desc": "Large collection of puzzles and riddle challenges"}, {"name": "xkcd wiki", "url": "https://wiki.xkcd.com/irc/Puzzles", "desc": "Community puzzle archive from xkcd IRC"}, {"name": "Puzzles", "url": "https://gurmeet.net/puzzles/", "desc": "Curated puzzle collection from Gurmeet.Net"}]}, {"key": "comm", "title": "Communities & Forums", "accent": "linear-gradient(135deg,#fc5c7d,#6a82fb)", "note": "", "items": [{"name": "Quora", "url": "https://www.quora.com/", "desc": "Q&A platform for knowledge sharing on any topic"}, {"name": "UbuntuForums", "url": "https://ubuntuforums.org/", "desc": "Community support forum for Ubuntu Linux users"}, {"name": "GitHub", "url": "https://github.com/", "desc": "Code hosting and collaboration platform for developers"}, {"name": "3DSwym", "url": "https://r1132100503382-eu1-3dswym.3dexperience.3ds.com/", "desc": "Dassault Systèmes collaborative innovation community"}]}, {"key": "career", "title": "Career & Jobs", "accent": "linear-gradient(135deg,#16a085,#f4d03f)", "note": "", "items": [{"name": "Emp NPP", "url": "https://www.eneversion.nic.in/membership/dashboard", "desc": "Employment Newspaper for government job notifications"}, {"name": "80,000 Hours", "url": "https://80000hours.org/career-guide/?int_campaign=homepage__read_guide_button", "desc": "Research-backed guide to a fulfilling career that does good"}]}, {"key": "movies", "title": "Movies & Streaming", "accent": "linear-gradient(135deg,#ff512f,#dd2476)", "note": "", "items": [{"name": "Free Movies | Tubi", "url": "https://tubitv.com/movies/100002888/2012", "desc": "Free ad-supported streaming service for movies and TV"}, {"name": "Movie-Map", "url": "https://www.movie-map.com/", "desc": "Find similar movies by exploring an interactive recommendation map"}, {"name": "A Good Movies to Watch", "url": "https://agoodmovietowatch.com/", "desc": "Curated list of highly-rated but lesser-known films"}, {"name": "Fmovies", "url": "https://fmovies.to/", "desc": "Free streaming site for movies and TV shows"}]}, {"key": "down", "title": "Downloads & Torrents", "accent": "linear-gradient(135deg,#614385,#516395)", "note": "", "items": [{"name": "The Pirate Bay", "url": "https://tpb.party/", "desc": "Peer-to-peer torrent search engine for file sharing"}, {"name": "Pahe.in", "url": "https://pahe.in/", "desc": "Compressed movie and TV show downloads"}]}, {"key": "kgp", "title": "IIT Kharagpur (Archive)", "accent": "linear-gradient(135deg,#5f72be,#9b23ea)", "note": "Campus links from IIT Kharagpur — several work only on the campus network.", "items": [{"name": "ERP", "url": "https://erp.iitkgp.ernet.in/SSOAdministration/login.htm?sessionToken=5F65C41D7241CE0E4F49DF8AB6EB801E.worker2&requestedUrl=https://erp.iitkgp.ernet.in/IIT_ERP3/", "desc": "IIT Kharagpur Enterprise Resource Planning portal"}, {"name": "CDC IIT kgp", "url": "http://www.cdc.iitkgp.ac.in/", "desc": "Career Development Centre for placements and internships"}, {"name": "Zimbra", "url": "https://iitkgpmail.iitkgp.ac.in/zimbra/", "desc": "IIT KGP webmail service powered by Zimbra"}, {"name": "Internal Notice Board", "url": "http://noticeboard.iitkgp.ernet.in/", "desc": "Campus-wide internal announcements and notices"}, {"name": "Mechatronics", "url": "http://10.11.51.101/moodle/my/", "desc": "Moodle course page for Mechatronics lab"}, {"name": "CSLab2018", "url": "http://10.128.8.90/moodle/", "desc": "Moodle course page for Computer Science lab"}, {"name": "Moodle CSL", "url": "http://10.128.8.60/moodle/user/view.php?id=572&course=31", "desc": "Moodle course page for CSL coursework"}, {"name": "Moodle Auto Control", "url": "http://10.57.2.100/moodle/", "desc": "Moodle course page for Automatic Control Systems"}, {"name": "LRD & MircoLab", "url": "http://10.11.51.111/moodle/", "desc": "Moodle page for LRD and Micro-lab coursework"}, {"name": "Robo Kinematics", "url": "http://10.128.8.60/moodle/course/view.php?id=36", "desc": "Moodle course page for Robot Kinematics"}, {"name": "Zaaiqa", "url": "https://www.zaaiqa.com/", "desc": "Online food ordering and delivery service"}]}];
-
+    var DATA = [{"key": "learn", "title": "Learning & Courses", "accent": "linear-gradient(135deg,#36d1dc,#5b86e5)", "note": "", "items": [{"name": "Modern Robotics", "url": "http://hades.mech.northwestern.edu/index.php/Modern_Robotics", "desc": "Northwestern University robotics textbook and software"}, {"name": "Introduction to Robotics", "url": "https://see.stanford.edu/Course/CS223A", "desc": "Stanford CS223A robotics course materials"}, {"name": "Robotics | edX", "url": "https://www.edx.org/micromasters/pennx-robotics", "desc": "Penn robotics MicroMasters program on edX"}, {"name": "Introduction to Haptics | Stanford Lagunita", "url": "https://lagunita.stanford.edu/courses/SelfPaced/Haptics/2014/about", "desc": "Stanford course on haptic interfaces and feedback"}, {"name": "Dashboard | Stanford Lagunita", "url": "https://lagunita.stanford.edu/dashboard", "desc": "Stanford Lagunita course dashboard portal"}, {"name": "other resources", "url": "http://hapkit.stanford.edu/resources.html", "desc": "Additional haptics learning resources from Stanford"}, {"name": "Hapkit", "url": "http://hapkit.stanford.edu/", "desc": "Haptic device kit for Stanford haptics course"}, {"name": "Udacity", "url": "https://www.udacity.com/", "desc": "Tech and programming nanodegree courses with industry projects"}, {"name": "Skill Share", "url": "https://www.skillshare.com/", "desc": "Creative classes in design, illustration, photography and more"}, {"name": "Brilliant", "url": "https://brilliant.org/", "desc": "Interactive math, science and computer science courses"}, {"name": "MIT", "url": "https://ocw.mit.edu/", "desc": "Free university-level courses from MIT OpenCourseWare"}, {"name": "Udemy", "url": "https://www.udemy.com/", "desc": "Marketplace for online courses on a wide range of topics"}, {"name": "Unacademy", "url": "https://unacademy.com/", "desc": "Indian education platform with live classes and test prep"}, {"name": "NPTEL", "url": "https://nptel.ac.in/", "desc": "Free engineering and science video lectures from IITs and IISc"}, {"name": "Swayam", "url": "https://swayam.gov.in/", "desc": "Indian government platform for free university-level courses"}, {"name": "Khan Academy", "url": "https://www.khanacademy.org/", "desc": "Free courses in math, science, computing and test prep"}, {"name": "3DEXPERIENCE Edu SPACE", "url": "https://edu.3ds.com/", "desc": "Dassault Systèmes educational platform for 3D design and engineering"}, {"name": "STANFORD LAGUNITA", "url": "https://lagunita.stanford.edu/", "desc": "Stanford University free online courses platform (archived)"}, {"name": "Stanford Online", "url": "https://online.stanford.edu/", "desc": "Stanford professional and academic online courses and certificates"}, {"name": "edX", "url": "https://www.edx.org/", "desc": "University-level courses from top institutions worldwide"}, {"name": "Coursera", "url": "https://www.coursera.org/", "desc": "Online degrees and professional certificates from top universities"}, {"name": "NIELIT e-Learning portal", "url": "https://elearn.nielit.gov.in/", "desc": "Indian government IT literacy and e-learning portal"}]}, {"key": "engsci", "title": "Engineering & Science", "accent": "linear-gradient(135deg,#11998e,#38ef7d)", "note": "", "items": [{"name": "Science | AAAS", "url": "https://www.science.org/", "desc": "Peer-reviewed journal for scientific research articles"}, {"name": "Engineering ToolBox", "url": "http://www.engineeringtoolbox.com/", "desc": "Reference tables and calculators for engineering"}, {"name": "Virtual Lab", "url": "http://iitkgp.vlab.co.in/", "desc": "IIT KGP virtual laboratory simulations"}, {"name": "ME Concepts Simplified", "url": "http://www.mesubjects.net/", "desc": "Simplified mechanical engineering concepts and tutorials"}, {"name": "LearnThermo", "url": "http://www.learnthermo.com/T1-tutorial/ch02/lesson-A/pg03.php", "desc": "Interactive thermodynamics tutorials and examples"}, {"name": "Animated Engines", "url": "http://www.animatedengines.com/", "desc": "Animated illustrations of engine mechanisms"}, {"name": "ThermoPedia", "url": "http://www.thermopedia.com/", "desc": "Encyclopedia of thermal and fluids engineering"}, {"name": "Fluid Property Calculator", "url": "https://www.irc.wisc.edu/properties/", "desc": "Online calculator for fluid thermodynamic properties"}, {"name": "Elasticity(JjC)", "url": "http://solidmechanics.org/Text/Chapter3_2/Chapter3_2.php", "desc": "Solid mechanics and elasticity reference material"}, {"name": "Machine Screws Calculator", "url": "https://precisionmindsetllc.com/Calculators/MachineScrews/machine-screw-thread-shear.html", "desc": "Thread shear strength calculator for machine screws"}, {"name": "Four Bar Linkage Mechanism", "url": "http://www.mekanizmalar.com/four-bar-mechanism.html", "desc": "Interactive four-bar mechanism simulator"}, {"name": "IESNA and NEMA Light Distribution Types", "url": "https://www.superbrightleds.com/blog/iesna-and-nema-light-distribution-types.html", "desc": "Guide to lighting distribution classifications"}, {"name": "The Antenna Theory Website", "url": "https://www.antenna-theory.com/", "desc": "Comprehensive reference on antenna design theory"}, {"name": "Antenna Theory - Quick Guide", "url": "https://www.tutorialspoint.com/antenna_theory/antenna_theory_quick_guide.htm", "desc": "Concise tutorial on antenna fundamentals"}, {"name": "Tutorvista", "url": "https://formulas.tutorvista.com/", "desc": "Math and science formulas reference"}, {"name": "Human Biodigital", "url": "https://human.biodigital.com/", "desc": "Visualize anatomy, disease, and treatments in interactive 3D"}, {"name": "Wikipedia", "url": "https://en.wikipedia.org/wiki/Main_Page", "desc": "Free online encyclopedia built by community contributors"}, {"name": "ResearchGate", "url": "https://www.researchgate.net/", "desc": "Academic social network for researchers and scientists"}]}, {"key": "code", "title": "Coding, Interviews & Puzzles", "accent": "linear-gradient(135deg,#ee0979,#ff6a00)", "note": "", "items": [{"name": "Gurmeet.Net", "url": "https://gurmeet.net/", "desc": "Math puzzles, algorithms, and programming challenges"}, {"name": "Puzzling Stack Exchange", "url": "https://puzzling.stackexchange.com/", "desc": "Community Q&A for puzzle enthusiasts"}, {"name": "JobTestPrep", "url": "https://www.jobtestprep.com/", "desc": "Practice tests for job aptitude assessments"}, {"name": "Youth4work PREP", "url": "https://www.prep.youth4work.com/", "desc": "Online test prep platform for competitive exams"}, {"name": "CareerCup", "url": "https://www.careercup.com/", "desc": "Interview questions from top tech companies"}, {"name": "LeetCode", "url": "https://leetcode.com/", "desc": "Coding interview prep with algorithm challenges"}, {"name": "HackerRank", "url": "https://www.hackerrank.com/", "desc": "Competitive programming and coding skill challenges"}, {"name": "Codeforces", "url": "http://codeforces.com/", "desc": "Competitive programming contests and problems"}, {"name": "InterviewBit", "url": "https://www.interviewbit.com/", "desc": "Structured coding interview preparation platform"}, {"name": "Aptitude-Test.com", "url": "https://www.aptitude-test.com/", "desc": "Free online aptitude tests and practice papers"}, {"name": "Bulls Eye", "url": "https://www.hitbullseye.com/?loggedout", "desc": "MBA and competitive exam preparation resources"}, {"name": "Gradeup", "url": "https://gradeup.co/", "desc": "Exam prep for GATE, banking, and government tests"}, {"name": "MindYourDecisions", "url": "https://www.youtube.com/user/MindYourDecisions", "desc": "YouTube channel on math puzzles and game theory"}, {"name": "LOGICALLY YOURS", "url": "https://www.youtube.com/channel/UCTRxnMudmOGNw0g4gZf5D8g", "desc": "YouTube channel for logical reasoning puzzles"}, {"name": "Puzzle Blog", "url": "http://puzzle-a-day.blogspot.com/?view=magazine", "desc": "Daily puzzle blog with brain teasers"}, {"name": "Interview Puzzles", "url": "http://how-to-crack-the-interview.blogspot.com/2008_04_01_archive.html", "desc": "Collection of puzzles commonly asked in interviews"}, {"name": "Ultimate Puzzle and Riddles", "url": "http://www.puzzlesite.nl/index_us.html", "desc": "Large collection of puzzles and riddle challenges"}, {"name": "xkcd wiki", "url": "https://wiki.xkcd.com/irc/Puzzles", "desc": "Community puzzle archive from xkcd IRC"}, {"name": "Puzzles", "url": "https://gurmeet.net/puzzles/", "desc": "Curated puzzle collection from Gurmeet.Net"}, {"name": "CCC Practice Test", "url": "https://cccpracticetest.com/", "desc": "Canadian citizenship test practice questions"}, {"name": "Interview Text", "url": "http://cdc.iitkgp.ac.in/preparations/", "desc": "CDC text-based interview preparation resources"}, {"name": "Interview Video", "url": "http://www.cdc.iitkgp.ac.in/video-library/", "desc": "CDC video library for interview preparation"}]}, {"key": "community", "title": "Community & Career", "accent": "linear-gradient(135deg,#fc5c7d,#6a82fb)", "note": "", "items": [{"name": "Emp NPP", "url": "https://www.eneversion.nic.in/membership/dashboard", "desc": "Employment Newspaper for government job notifications"}, {"name": "80,000 Hours", "url": "https://80000hours.org/career-guide/?int_campaign=homepage__read_guide_button", "desc": "Research-backed guide to a fulfilling career that does good"}, {"name": "Quora", "url": "https://www.quora.com/", "desc": "Q&A platform for knowledge sharing on any topic"}, {"name": "UbuntuForums", "url": "https://ubuntuforums.org/", "desc": "Community support forum for Ubuntu Linux users"}, {"name": "GitHub", "url": "https://github.com/", "desc": "Code hosting and collaboration platform for developers"}, {"name": "3DSwym", "url": "https://r1132100503382-eu1-3dswym.3dexperience.3ds.com/", "desc": "Dassault Systèmes collaborative innovation community"}]}, {"key": "fun", "title": "Entertainment & Downloads", "accent": "linear-gradient(135deg,#ff512f,#dd2476)", "note": "", "items": [{"name": "The Pirate Bay", "url": "https://tpb.party/", "desc": "Peer-to-peer torrent search engine for file sharing"}, {"name": "Free Movies | Tubi", "url": "https://tubitv.com/movies/100002888/2012", "desc": "Free ad-supported streaming service for movies and TV"}, {"name": "Movie-Map", "url": "https://www.movie-map.com/", "desc": "Find similar movies by exploring an interactive recommendation map"}, {"name": "A Good Movies to Watch", "url": "https://agoodmovietowatch.com/", "desc": "Curated list of highly-rated but lesser-known films"}, {"name": "Fmovies", "url": "https://fmovies.to/", "desc": "Free streaming site for movies and TV shows"}, {"name": "Pahe.in", "url": "https://pahe.in/", "desc": "Compressed movie and TV show downloads"}]}, {"key": "kgp", "title": "IIT Kharagpur (Archive)", "accent": "linear-gradient(135deg,#5f72be,#9b23ea)", "note": "Campus links from IIT Kharagpur — several work only on the campus network.", "items": [{"name": "ERP", "url": "https://erp.iitkgp.ernet.in/SSOAdministration/login.htm?sessionToken=5F65C41D7241CE0E4F49DF8AB6EB801E.worker2&requestedUrl=https://erp.iitkgp.ernet.in/IIT_ERP3/", "desc": "IIT Kharagpur Enterprise Resource Planning portal"}, {"name": "CDC IIT kgp", "url": "http://www.cdc.iitkgp.ac.in/", "desc": "Career Development Centre for placements and internships"}, {"name": "Zimbra", "url": "https://iitkgpmail.iitkgp.ac.in/zimbra/", "desc": "IIT KGP webmail service powered by Zimbra"}, {"name": "Internal Notice Board", "url": "http://noticeboard.iitkgp.ernet.in/", "desc": "Campus-wide internal announcements and notices"}, {"name": "Mechatronics", "url": "http://10.11.51.101/moodle/my/", "desc": "Moodle course page for Mechatronics lab"}, {"name": "CSLab2018", "url": "http://10.128.8.90/moodle/", "desc": "Moodle course page for Computer Science lab"}, {"name": "Moodle CSL", "url": "http://10.128.8.60/moodle/user/view.php?id=572&course=31", "desc": "Moodle course page for CSL coursework"}, {"name": "Moodle Auto Control", "url": "http://10.57.2.100/moodle/", "desc": "Moodle course page for Automatic Control Systems"}, {"name": "LRD & MircoLab", "url": "http://10.11.51.111/moodle/", "desc": "Moodle page for LRD and Micro-lab coursework"}, {"name": "Robo Kinematics", "url": "http://10.128.8.60/moodle/course/view.php?id=36", "desc": "Moodle course page for Robot Kinematics"}, {"name": "Zaaiqa", "url": "https://www.zaaiqa.com/", "desc": "Online food ordering and delivery service"}]}];
+    function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
     function hostOf(url){ try { return new URL(url).hostname; } catch(e){ return ""; } }
     function isIP(h){ return /^\d{1,3}(\.\d{1,3}){3}$/.test(h); }
     function monoChar(name){ var m=(name||"").replace(/[^A-Za-z0-9]/,"").charAt(0); return (m||"#").toUpperCase(); }
 
     var main = document.getElementById("main");
+    var nav = document.getElementById("cat-nav");
+    nav.innerHTML = '<div class="nav-title">Categories</div>';
+
     DATA.forEach(function(cat){
       var sec = document.createElement("section");
-      sec.className = "category"; sec.dataset.cat = cat.key;
+      sec.className = "category"; sec.id = "cat-" + cat.key; sec.dataset.cat = cat.key;
       var noteHtml = cat.note ? '<p class="cat-note">'+cat.note+'</p>' : '';
       sec.innerHTML =
         '<div class="cat-head"><span class="cat-dot" style="background:'+cat.accent+'"></span>'+
@@ -132,48 +196,58 @@
       var grid = sec.querySelector(".cat-grid");
       cat.items.forEach(function(it){
         var host = hostOf(it.url);
+        var useImg = host && !isIP(host);
         var a = document.createElement("a");
         a.className = "link-item";
         a.href = it.url; a.target = "_blank"; a.rel = "noopener noreferrer";
         a.style.setProperty("--accent", cat.accent);
-        a.dataset.desc = it.desc || "";
         a.dataset.search = ((it.name||"")+" "+(it.desc||"")).toLowerCase();
-        var useImg = host && !isIP(host);
-        var favClass = useImg ? "fav" : "fav noimg";
-        var imgHtml = useImg ? '<img src="https://www.google.com/s2/favicons?domain='+encodeURIComponent(host)+'&sz=64" alt="" loading="lazy" onerror="this.parentNode.classList.add(\'noimg\')">' : '';
-        a.innerHTML = '<span class="'+favClass+'" style="--accent:'+cat.accent+'">'+imgHtml+'<span class="mono">'+monoChar(it.name)+'</span></span><span class="lname">'+it.name+'</span>';
+        var favCls = useImg ? "fav" : "fav noimg";
+        var imgHtml = useImg ? '<img src="https://www.google.com/s2/favicons?domain='+encodeURIComponent(host)+'&sz=128" alt="" loading="lazy" onerror="this.parentNode.classList.add(\'noimg\')">' : '';
+        a.innerHTML =
+          '<span class="'+favCls+'" style="--accent:'+cat.accent+'">'+imgHtml+'<span class="mono">'+monoChar(it.name)+'</span></span>'+
+          '<span class="link-body"><span class="lname">'+esc(it.name)+'</span><span class="ldiv"></span><span class="ldesc">'+esc(it.desc)+'</span></span>';
         grid.appendChild(a);
       });
       main.appendChild(sec);
+
+      var na = document.createElement("a");
+      na.href = "#cat-" + cat.key; na.dataset.target = "cat-" + cat.key;
+      na.innerHTML = '<span class="nav-dot" style="background:'+cat.accent+'"></span><span class="nav-name">'+cat.title+'</span>';
+      nav.appendChild(na);
     });
 
-    /* ----- Tooltip (hover + long-press) ----- */
-    var tip = document.getElementById("tip");
-    function showTip(el){
-      var d = el.dataset.desc; if(!d){ return; }
-      tip.textContent = d; tip.style.display = "block";
-      var r = el.getBoundingClientRect();
-      var tr = tip.getBoundingClientRect();
-      var top = r.top - tr.height - 10;
-      if(top < 8) top = r.bottom + 10;
-      var left = r.left + r.width/2 - tr.width/2;
-      left = Math.max(8, Math.min(left, window.innerWidth - tr.width - 8));
-      tip.style.top = Math.round(top)+"px"; tip.style.left = Math.round(left)+"px";
+    var navLinks = Array.prototype.slice.call(nav.querySelectorAll("a"));
+    var sections = DATA.map(function(c){ return document.getElementById("cat-"+c.key); });
+    var toTopBtn = document.getElementById("to-top");
+    var navToggle = document.getElementById("nav-toggle");
+    var backdrop = document.getElementById("nav-backdrop");
+
+    function openNav(){ nav.classList.add("open"); backdrop.classList.add("open"); }
+    function closeNav(){ nav.classList.remove("open"); backdrop.classList.remove("open"); }
+    navToggle.addEventListener("click", function(){ nav.classList.contains("open") ? closeNav() : openNav(); });
+    backdrop.addEventListener("click", closeNav);
+    navLinks.forEach(function(l){ l.addEventListener("click", closeNav); });
+    toTopBtn.addEventListener("click", function(){ window.scrollTo({top:0,behavior:"smooth"}); });
+
+    var ticking = false;
+    function onScroll(){
+      if(ticking) return; ticking = true;
+      requestAnimationFrame(function(){
+        var show = window.scrollY > 280;
+        nav.classList.toggle("visible", show);
+        toTopBtn.classList.toggle("visible", show);
+        navToggle.classList.toggle("visible", show);
+        if(!show) closeNav();
+        var pos = window.scrollY + 150, active = sections[0];
+        sections.forEach(function(s){ if(s && s.offsetTop <= pos) active = s; });
+        navLinks.forEach(function(l){ l.classList.toggle("active", active && l.dataset.target === active.id); });
+        ticking = false;
+      });
     }
-    function hideTip(){ tip.style.display = "none"; }
+    window.addEventListener("scroll", onScroll, {passive:true});
+    onScroll();
 
-    document.querySelectorAll(".link-item").forEach(function(el){
-      el.addEventListener("mouseenter", function(){ showTip(el); });
-      el.addEventListener("mouseleave", hideTip);
-      var timer=null, suppress=false;
-      el.addEventListener("touchstart", function(){ suppress=false; timer=setTimeout(function(){ suppress=true; showTip(el); },450); }, {passive:true});
-      el.addEventListener("touchend", function(){ clearTimeout(timer); if(suppress){ setTimeout(hideTip,1800); } });
-      el.addEventListener("touchmove", function(){ clearTimeout(timer); hideTip(); }, {passive:true});
-      el.addEventListener("click", function(e){ if(suppress){ e.preventDefault(); suppress=false; } });
-    });
-    window.addEventListener("scroll", hideTip, {passive:true});
-
-    /* ----- Search ----- */
     var search = document.getElementById("search");
     var noRes = document.getElementById("no-results");
     search.addEventListener("input", function(){

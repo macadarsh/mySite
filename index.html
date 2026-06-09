@@ -272,6 +272,20 @@
       background: linear-gradient(135deg, #ff6ec4, #7873f5);
       box-shadow: 0 4px 14px rgba(120, 115, 245, 0.45);
     }
+
+    /* ---------- BACK TO TOP ---------- */
+    .to-top {
+      position: fixed; right: 20px; bottom: 20px; z-index: 90;
+      width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer; border-radius: 50%; color: #fff;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      box-shadow: 0 6px 20px rgba(120, 115, 245, 0.5);
+      opacity: 0; visibility: hidden; transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    }
+    .to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .to-top:hover { transform: translateY(-3px); }
+    .to-top svg { width: 22px; height: 22px; }
   </style>
 </head>
 <body>
@@ -360,8 +374,20 @@
     <p class="copyright">&copy; <span id="year"></span> Adarsh Mishra. All rights reserved.</p>
   </footer>
 
+  <button class="to-top" id="to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    (function () {
+      var btn = document.getElementById("to-top");
+      function upd() { btn.classList.toggle("visible", window.scrollY > 280); }
+      window.addEventListener("scroll", upd, { passive: true });
+      btn.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      upd();
+    })();
 
     (function () {
       var DAY_START = 7;   // 07:00 and later = day

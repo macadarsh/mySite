@@ -247,6 +247,42 @@
     .viewer-stage:fullscreen .doc-scroll { max-height: 100vh; height: 100vh; }
     .viewer-stage:fullscreen .doc-page { border-radius: 0; min-height: 100vh; }
 
+    /* ---------- BACK TO TOP ---------- */
+    .to-top {
+      position: fixed; right: 20px; bottom: 20px; z-index: 90;
+      width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+      border: none; cursor: pointer; border-radius: 50%; color: #fff;
+      background: linear-gradient(135deg, #ff6ec4, #7873f5);
+      box-shadow: 0 6px 20px rgba(120, 115, 245, 0.5);
+      opacity: 0; visibility: hidden; transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    }
+    .to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .to-top:hover { transform: translateY(-3px); }
+    .to-top svg { width: 22px; height: 22px; }
+
+    /* ---------- FEATURED LINK ---------- */
+    .feature {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      text-decoration: none; color: var(--text);
+      background: linear-gradient(120deg, rgba(120,115,245,0.28), rgba(79,172,254,0.22));
+      border: 1px solid var(--card-border); border-radius: var(--radius);
+      padding: 24px 26px; margin-bottom: 26px;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .feature:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,0.32); }
+    .feature .f-icon {
+      width: 58px; height: 58px; flex-shrink: 0; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #7873f5, #4facfe); box-shadow: 0 8px 20px rgba(79,172,254,0.4);
+    }
+    .feature .f-icon svg { width: 32px; height: 32px; color: #fff; }
+    .feature .f-body { flex: 1; min-width: 200px; }
+    .feature .f-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); }
+    .feature .f-body h2 { font-size: 1.3rem; font-weight: 750; margin: 4px 0 6px; }
+    .feature .f-body p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+    .feature .f-go { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+
     @media (max-width: 480px) {
       .grid { grid-template-columns: 1fr; }
       .topbar { flex-wrap: wrap; }
@@ -272,6 +308,17 @@
   </div>
 
   <main id="grid-view">
+    <a class="feature" href="../systemEngineering/index.html">
+      <span class="f-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+      </span>
+      <div class="f-body">
+        <div class="f-tag">Study Hub</div>
+        <h2>Systems Engineering</h2>
+        <p>INCOSE ASEP study hub &mdash; handbook notes, podcasts, and interactive practice questions, organised by chapter.</p>
+      </div>
+      <span class="f-go">Open &rarr;</span>
+    </a>
     <div class="grid" id="grid"></div>
   </main>
 
@@ -289,6 +336,10 @@
     </div>
     <div class="viewer-stage" id="viewer-stage"></div>
   </section>
+
+  <button class="to-top" id="to-top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <script>
@@ -417,6 +468,15 @@
     }
 
     document.getElementById("back-btn").addEventListener("click", closeViewer);
+
+    /* ----- Back to top ----- */
+    (function () {
+      var tt = document.getElementById("to-top");
+      function upd() { tt.classList.toggle("visible", window.scrollY > 280); }
+      window.addEventListener("scroll", upd, { passive: true });
+      tt.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: "smooth" }); });
+      upd();
+    })();
 
     /* ----- Full screen (all file types) ----- */
     var fsBtn = document.getElementById("fs-btn");
